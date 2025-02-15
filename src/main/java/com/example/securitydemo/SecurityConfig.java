@@ -19,7 +19,9 @@ public class SecurityConfig {
         /*made our api stateless*/
         http.sessionManagement(session
                 ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        /*this is for browser*/
         //        http.formLogin(withDefaults());
+        /*this is for postman*/
         http.httpBasic(withDefaults());
         return http.build();
     }
