@@ -21,7 +21,9 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
+        http.authorizeHttpRequests((requests) ->
+                requests.requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().authenticated());
         /*made our api stateless or cookies less*/
         http.sessionManagement(session
                 ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -29,6 +31,9 @@ public class SecurityConfig {
         //        http.formLogin(withDefaults());
         /*this is for postman*/
         http.httpBasic(withDefaults());
+        http.headers(headers ->
+                        headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin() ));
+        http.csrf(csrf->csrf.disable());
         return http.build();
     }
 
