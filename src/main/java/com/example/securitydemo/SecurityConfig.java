@@ -2,6 +2,7 @@ package com.example.securitydemo;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,12 +16,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
-        /*made our api stateless*/
+        /*made our api stateless or cookies less*/
         http.sessionManagement(session
                 ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         /*this is for browser*/
@@ -35,8 +37,10 @@ public class SecurityConfig {
 
         UserDetails user1 = User.withUsername("user1").
                 password("{noop}password1").roles("USER").build();
+
         UserDetails admin = User.withUsername("admin").
                 password("{noop}adminPass").roles("ADMIN").build();
+
         return new InMemoryUserDetailsManager(user1,admin);
     }
 }
